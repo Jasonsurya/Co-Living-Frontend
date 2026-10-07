@@ -1,12 +1,16 @@
+//import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+//import { initDatabase } from "./services/database";
 import LandingPage from './pages/LandingPage';
-import LoginPage from './pages/LoginPage';
+import LoginPage from './pages/LoginPage';   // <-- TAMBAHKAN INI
 import DashboardPage from './pages/DashboardPage';
 import KamarPage from './pages/KamarPage';
 import PenghuniPage from './pages/PenghuniPage';
-import AkuntansiPage from './pages/AkuntansiPage';
+import KeuanganPage from './pages/KeuanganPage';
+import AdminRecoveryPage from "./pages/AdminRecoveryPage";
 
 export default function App() {
+
   return (
     <Router>
       <Routes>
@@ -14,13 +18,15 @@ export default function App() {
         
         <Route path="/login" element={<LoginPage />} /> 
 
+        <Route path="/admin/recovery" element={<AdminRecoveryPage />} />
+
         <Route path="/dashboard" element={<DashboardPage />} />
 
-        <Route path="/Kamar" element={<KamarPage />} />
+        <Route path="/kamar" element={<KamarPage />} />
 
-        <Route path="/Penghuni" element={<PenghuniPage />} />
+        <Route path="/penghuni" element={<PenghuniPage />} />
 
-        <Route path="/Akuntansi" element={<AkuntansiPage />} />
+        <Route path="/keuangan" element={<KeuanganPage />} />
       </Routes>
 
     </Router>
