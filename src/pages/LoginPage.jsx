@@ -1,6 +1,7 @@
 // src/pages/LoginPage.jsx
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Building2 } from 'lucide-react'; // Menggunakan ikon modern agar aman dari error path gambar
 
 const loginText = {
   welcome: "Welcome to Co-Living Pagul!",
@@ -13,13 +14,17 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // FUNGSI LOGIKA CEK LOGIN KE BACKEND API
+  // FUNGSI LOGIKA CEK LOGIN KE BACKEND API (Otomatis deteksi lokal vs Railway)
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
+    const API_URL = window.location.hostname === "localhost"
+      ? "http://localhost:5000/api"
+      : "https://co-living-backend-production.up.railway.app/api";
+
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,9 +71,9 @@ export default function LoginPage() {
       <div className="relative bg-white w-full max-w-md p-8 rounded-3xl shadow-2xl border border-slate-100 z-10 text-left">
         
         <div className="mb-6 text-center">
-          <div className="inline-flex items-center gap-2.5 mb-3">
-            <img src="/src/assets/Logo Co-Living Pagul.png" alt="Logo" className="h-9 w-auto object-contain" />
-            <span className="text-sm font-black text-slate-950 tracking-tight">CO-LIVING PAGUL</span>
+          <div className="inline-flex items-center gap-2.5 mb-3 bg-slate-100 px-3 py-1.5 rounded-full">
+            <Building2 className="h-5 w-5 text-slate-900" />
+            <span className="text-xs font-black text-slate-950 tracking-tight">CO-LIVING PAGUL</span>
           </div>
           <h3 className="text-xl font-black text-slate-950 tracking-tight mt-2">{loginText.welcome}</h3>
           <p className="text-xs text-slate-500 mt-1.5 leading-relaxed font-medium px-4">{loginText.subWelcome}</p>
@@ -83,7 +88,7 @@ export default function LoginPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Masukkan username admin"
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-hidden focus:border-slate-900 focus:bg-white transition-all text-slate-800 font-medium"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-slate-900 focus:bg-white transition-all text-slate-800 font-medium"
             />
           </div>
 
@@ -95,7 +100,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Masukkan password"
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-hidden focus:border-slate-900 focus:bg-white transition-all text-slate-800"
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-slate-900 focus:bg-white transition-all text-slate-800"
             />
           </div>
 
@@ -105,7 +110,6 @@ export default function LoginPage() {
               Ingat Saya
             </label>
             
-            {/* TOMBOL LUPA PASSWORD DENGAN PERINGATAN AMAN */}
             <button 
               type="button"
               onClick={handleLupaPasswordClick}
