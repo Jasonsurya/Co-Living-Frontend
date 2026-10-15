@@ -6,6 +6,12 @@ const API_URL =
     ? "http://localhost:5000/api"
     : "https://co-living-backend-production-1008.up.railway.app/api");
 
+console.log("[API CONFIG]", {
+  hostname: window.location.hostname,
+  envUrl: import.meta.env.VITE_API_URL,
+  finalUrl: API_URL,
+});
+
 export default API_URL;
 
 // ==========================================
@@ -227,123 +233,4 @@ export const getRiwayatDeposit = async (kontrakId) => {
     throw new Error("Gagal mengambil riwayat deposit");
   }
   return await response.json();
-};
-
-export const prosesDendaDeposit = async (data) => {
-  const isFormData = data instanceof FormData;
-
-  const options = {
-    method: "POST",
-    body: isFormData ? data : JSON.stringify(data),
-  };
-
-  if (!isFormData) {
-    options.headers = {
-      "Content-Type": "application/json",
-    };
-  }
-
-  const response = await fetch(`${API_URL}/deposit/denda`, options);
-  const result = await response.json();
-
-  if (!response.ok) {
-    throw new Error(result.message || "Gagal memproses denda");
-  }
-  return result;
-};
-
-export const kembalikanDeposit = async (data) => {
-  const response = await fetch(`${API_URL}/deposit/kembalikan`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-
-  const result = await response.json();
-  if (!response.ok) {
-    throw new Error(result.message || "Gagal memproses pengembalian deposit");
-  }
-  return result;
-};
-
-// ==========================================
-// 4. DOKUMEN KONTRAK & SURAT
-// ==========================================
-
-/**
- * Generate PDF dari template Word & simpan record di PostgreSQL
- * @param {number|string} kontrakId 
- * @param {boolean} force true jika ingin memaksa re-generate PDF baru
- */
-export const generateSuratKontrak = async (kontrakId, force = false) => {
-  const url = `${API_URL}/dokumen-kontrak/generate/${kontrakId}${force ? "?force=true" : ""}`;
-  const response = await fetch(url, {
-    method: "POST",
-  });
-
-  const result = await response.json();
-  if (!response.ok) {
-    throw new Error(result.message || "Gagal membuat surat dari template");
-  }
-  return result;
-};
-
-/**
- * Mendapatkan URL langsung untuk melihat/preview PDF (bisa dipakai di window.open atau iframe)
- * @param {number|string} kontrakId 
- * @param {boolean} force true jika ingin memaksa re-generate PDF baru
- */
-export const getLihatPdfSuratUrl = (kontrakId, force = false) => {
-  return `${API_URL}/dokumen-kontrak/lihat/${kontrakId}${force ? "?force=true" : ""}`;
-};
-
-/**
- * Upload file scan/foto surat yang sudah ditandatangani basah
- * @param {number|string} kontrakId 
- * @param {File} file 
- */
-export const uploadSuratKontrak = async (kontrakId, file) => {
-  const formData = new FormData();
-  formData.append("file_kontrak", file);
-
-  const response = await fetch(`${API_URL}/dokumen-kontrak/upload/${kontrakId}`, {
-    method: "POST",
-    body: formData,
-  });
-
-  const result = await response.json();
-  if (!response.ok) {
-    throw new Error(result.message || "Gagal mengunggah surat bertanda tangan");
-  }
-  return result;
-};
-
-/**
- * Mengambil daftar dokumen (GENERATE & UPLOAD) berdasarkan kontrakId
- * @param {number|string} kontrakId 
- */
-export const getDokumenKontrak = async (kontrakId) => {
-  const response = await fetch(`${API_URL}/dokumen-kontrak/kontrak/${kontrakId}`);
-  const result = await response.json();
-
-  if (!response.ok) {
-    throw new Error(result.message || "Gagal mengambil riwayat dokumen kontrak");
-  }
-  return result;
-};
-
-/**
- * Mengambil seluruh riwayat surat perpanjangan/kontrak lama & baru berdasarkan penghuniId
- * @param {number|string} penghuniId 
- */
-export const getRiwayatSuratPenghuni = async (penghuniId) => {
-  const response = await fetch(`${API_URL}/dokumen-kontrak/penghuni/${penghuniId}`);
-  const result = await response.json();
-
-  if (!response.ok) {
-    throw new Error(result.message || "Gagal mengambil riwayat surat penghuni");
-  }
-  return result;
 };
