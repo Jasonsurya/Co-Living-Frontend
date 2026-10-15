@@ -1,12 +1,12 @@
 // src/services/api.js
 
-const API_URL = window.location.hostname === "localhost"
-  ? "http://localhost:5000/api"
-  : "https://co-living-backend-production.up.railway.app/api";
 
-// ==========================================
-// 1. KAMAR & PENGHUNI
-// ==========================================
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  (window.location.hostname === "localhost"
+    ? "http://localhost:5000/api"
+    : "https://co-living-backend-production-1008.up.railway.app/api");
+
 
 export const getKamar = async () => {
   const response = await fetch(`${API_URL}/kamar`);

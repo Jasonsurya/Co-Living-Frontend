@@ -1,8 +1,7 @@
-//import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-//import { initDatabase } from "./services/database";
+
 import LandingPage from './pages/LandingPage';
-import LoginPage from './pages/LoginPage';   // <-- TAMBAHKAN INI
+import LoginPage from './pages/LoginPage';   
 import DashboardPage from './pages/DashboardPage';
 import KamarPage from './pages/KamarPage';
 import PenghuniPage from './pages/PenghuniPage';
