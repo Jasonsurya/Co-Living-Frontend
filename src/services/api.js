@@ -1,10 +1,16 @@
+// src/services/api.js
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
   (window.location.hostname === "localhost"
     ? "http://localhost:5000/api"
-    : "https://co-living-backend-production-1008.up.railway.app");
+    : "https://co-living-backend-production.up.railway.app/api");
 
+export default API_URL;
+
+// ==========================================
+// 1. KAMAR & PENGHUNI
+// ==========================================
 
 export const getKamar = async () => {
   const response = await fetch(`${API_URL}/kamar`);
@@ -269,7 +275,7 @@ export const kembalikanDeposit = async (data) => {
 /**
  * Generate PDF dari template Word & simpan record di PostgreSQL
  * @param {number|string} kontrakId 
- * @param {boolean} force - Set true jika ingin memaksa re-generate PDF baru
+ * @param {boolean} force true jika ingin memaksa re-generate PDF baru
  */
 export const generateSuratKontrak = async (kontrakId, force = false) => {
   const url = `${API_URL}/dokumen-kontrak/generate/${kontrakId}${force ? "?force=true" : ""}`;
@@ -287,7 +293,7 @@ export const generateSuratKontrak = async (kontrakId, force = false) => {
 /**
  * Mendapatkan URL langsung untuk melihat/preview PDF (bisa dipakai di window.open atau iframe)
  * @param {number|string} kontrakId 
- * @param {boolean} force - Set true jika ingin memaksa re-generate PDF baru
+ * @param {boolean} force true jika ingin memaksa re-generate PDF baru
  */
 export const getLihatPdfSuratUrl = (kontrakId, force = false) => {
   return `${API_URL}/dokumen-kontrak/lihat/${kontrakId}${force ? "?force=true" : ""}`;
