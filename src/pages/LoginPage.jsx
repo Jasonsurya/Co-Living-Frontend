@@ -21,7 +21,7 @@ export default function LoginPage() {
 
     const API_URL = window.location.hostname === "localhost"
       ? "http://localhost:5000/api"
-      : "https://co-living-backend-production.up.railway.app/api";
+      : "https://co-living-backend-production-1008.up.railway.app/apigi";
 
     try {
       const response = await fetch(`${API_URL}/auth/login`, {
