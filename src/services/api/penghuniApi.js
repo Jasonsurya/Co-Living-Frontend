@@ -1,4 +1,6 @@
-const API_URL = "http://localhost:5000/api/penghuni";
+import API_BASE_URL from "./config";
+
+const API_URL = `${API_BASE_URL}/penghuni`;
 
 export const getPenghuniByKamarId = async (kamarId) => {
   const response = await fetch(`${API_URL}/kamar/${kamarId}`);

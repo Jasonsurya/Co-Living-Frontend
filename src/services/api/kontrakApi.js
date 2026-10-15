@@ -1,4 +1,6 @@
-const API_URL = "http://localhost:5000/api/kontrak";
+import API_BASE_URL from "./config";
+
+const API_URL = `${API_BASE_URL}/kontrak`;
 
 export const perpanjangKontrak = async (kamarId, data) => {
     const response = await fetch(`${API_URL}/perpanjang/${kamarId}`, {
