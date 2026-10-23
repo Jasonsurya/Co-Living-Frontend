@@ -1,8 +1,8 @@
 // src/services/api.js
 
-const API_URL = 
-  import.meta.env.VITE_API_URL || 
-  "https://co-living-backend-production-1008.up.railway.app/api";
+import { getBaseUrl } from "./api/config";
+
+const API_URL = getBaseUrl();
 
 console.log("[API CONFIG FINAL]", {
   hostname: window.location.hostname,
@@ -255,5 +255,49 @@ export const getRiwayatDeposit = async (kontrakId) => {
   if (!response.ok) {
     throw new Error("Gagal mengambil riwayat deposit");
   }
+  return await response.json();
+};
+
+// ==========================================
+// 4. SURAT & DOKUMEN (TAMBAHAN BARU)
+// ==========================================
+
+export const generateSuratKontrak = async (kontrakId) => {
+  const response = await fetch(`${API_URL}/surat/generate/${kontrakId}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!response.ok) throw new Error("Gagal membuat surat dari template.");
+  return await response.json();
+};
+
+export const uploadSuratKontrak = async (formData) => {
+  const response = await fetch(`${API_URL}/surat/upload`, {
+    method: "POST",
+    body: formData, // FormData untuk file upload
+  });
+  if (!response.ok) throw new Error("Gagal mengunggah surat kontrak.");
+  return await response.json();
+};
+
+export const getRiwayatSuratPenghuni = async (penghuniId) => {
+  const response = await fetch(`${API_URL}/surat/penghuni/${penghuniId}`);
+  if (!response.ok) throw new Error("Gagal mengambil riwayat surat penghuni.");
+  return await response.json();
+};
+
+export const getDokumenKontrak = async (kontrakId) => {
+  const response = await fetch(`${API_URL}/surat/kontrak/${kontrakId}`);
+  if (!response.ok) throw new Error("Gagal mengambil dokumen kontrak.");
+  return await response.json();
+};
+
+export const prosesDendaDeposit = async (data) => {
+  const response = await fetch(`${API_URL}/keuangan/denda-deposit`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) throw new Error("Gagal memproses denda atau deposit.");
   return await response.json();
 };
