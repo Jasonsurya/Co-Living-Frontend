@@ -1,8 +1,19 @@
 import { useEffect, useState } from "react";
-import { Eye, X, FileText, ExternalLink, AlertCircle, CheckCircle2 } from "lucide-react";
+import {
+  Eye,
+  X,
+  FileText,
+  ExternalLink,
+  AlertCircle,
+  CheckCircle2,
+} from "lucide-react";
 import { getRiwayatSuratPenghuni, getDokumenKontrak } from "../../../services/api";
 
-const BACKEND_URL = "http://localhost:5000";
+// --- PERBAIKAN DI SINI (Gunakan config pusat) ---
+import { getBaseUrl } from "../../../services/api/config"; // Sesuaikan path relative foldernya
+
+// Otomatis berubah ke Railway saat online di Vercel, dan localhost saat di development
+const BACKEND_URL = getBaseUrl().replace("/api", "");
 
 export default function RiwayatSuratModal({
   isOpen,

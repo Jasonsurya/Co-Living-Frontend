@@ -1,7 +1,9 @@
 // Menggunakan URL Railway langsung secara aman tanpa perlu file config terpisah
 const BASE_URL = 
-  import.meta.env.VITE_API_URL || 
-  (window.location.hostname === "localhost" ? "http://localhost:5000/api" : "https://co-living-backend-production-1008.up.railway.app/api");
+import.meta.env.VITE_API_URL || 
+(window.location.hostname === "localhost" 
+    ? "http://localhost:5000/api" 
+    : "https://co-living-backend-production-1008.up.railway.app/api");
 
 const API_URL = `${BASE_URL}/kontrak`;
 

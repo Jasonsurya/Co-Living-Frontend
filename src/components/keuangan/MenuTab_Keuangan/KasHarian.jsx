@@ -7,8 +7,12 @@ import {
   hapusTransaksi,
 } from "../../../services/api";
 
-// URL dasar folder penyimpanan file upload dari backend
-const API_UPLOADS_URL = "http://localhost:5000/uploads";
+// --- PERBAIKAN DI SINI (Gunakan config pusat) ---
+import { getBaseUrl, getUploadsUrl } from "../../../services/api/config"; 
+
+// URL dasar folder penyimpanan file upload dinamis (Otomatis menyesuaikan Localhost / Railway)
+const API_UPLOADS_URL = getUploadsUrl();
+const BACKEND_URL = getBaseUrl().replace("/api", "");
 
 // Helper fungsi untuk membentuk URL foto bukti yang valid
 const getImageUrl = (filename) => {
@@ -21,7 +25,7 @@ const getImageUrl = (filename) => {
 
   // Jika di database sudah ada prefix 'uploads/'
   if (cleanPath.startsWith("uploads/")) {
-    return `http://localhost:5000/${cleanPath}`;
+    return `${BACKEND_URL}/${cleanPath}`;
   }
   // Jika di database sudah ada prefix 'bukti/'
   if (cleanPath.startsWith("bukti/")) {

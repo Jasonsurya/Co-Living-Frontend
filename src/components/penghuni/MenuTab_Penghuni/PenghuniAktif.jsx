@@ -10,7 +10,10 @@ import {
 import { generateSuratKontrak } from "../../../services/api";
 import HistoryDeposit from "../../penghuni/historyDeposit";
 
-const BACKEND_URL = "http://localhost:5000";
+// --- PERBAIKAN DI SINI (Gunakan config pusat) ---
+import { getBaseUrl } from "../../../services/api/config"; // Sesuaikan path relative foldernya
+
+const BACKEND_URL = getBaseUrl().replace("/api", ""); 
 
 export default function PenghuniAktif({
   handleOpenDetail,

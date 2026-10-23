@@ -1,14 +1,16 @@
 // src/pages/AdminRecoveryPage.jsx
+// src/pages/AdminRecoveryPage.jsx
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { KeyRound, Mail, ShieldCheck, ArrowLeft, Lock, User } from "lucide-react";
 import OtpModal from "../components/OtpModal";
 
-const BACKEND_URL = "http://localhost:5000";
+import { getBaseUrl } from "../services/api/config";
 
 export default function AdminRecoveryPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  // ... sisa kode di bawahnya tetap sama
 
   // Ambil secretKey sekali saja saat komponen dimuat (Lazy Initial State)
   const [secretKey] = useState(() => searchParams.get("key") || "");
@@ -62,7 +64,7 @@ export default function AdminRecoveryPage() {
       setLoading(true);
       setMessage({ type: "", text: "" });
 
-      const res = await fetch(`${BACKEND_URL}/api/auth/lupa-password`, {
+      const res = await fetch(`${getBaseUrl()}/auth/lupa-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -116,7 +118,7 @@ export default function AdminRecoveryPage() {
       setLoading(true);
       setMessage({ type: "", text: "" });
 
-      const res = await fetch(`${BACKEND_URL}/api/auth/reset-password`, {
+      const res = await fetch(`${getBaseUrl()}/auth/reset-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

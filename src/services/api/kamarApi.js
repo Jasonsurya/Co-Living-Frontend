@@ -1,11 +1,20 @@
-// Menggunakan URL Railway langsung secara aman tanpa perlu file config terpisah
 const BASE_URL = 
-  import.meta.env.VITE_API_URL || 
-  (window.location.hostname === "localhost" ? "http://localhost:5000/api" : "https://co-living-backend-production-1008.up.railway.app/api");
+import.meta.env.VITE_API_URL || 
+(window.location.hostname === "localhost" 
+    ? "http://localhost:5000/api" 
+    : "https://co-living-backend-production-1008.up.railway.app/api");
 
 const API_URL = `${BASE_URL}/kamar`;
 
+// --- TAMBAHKAN LOG INI ---
+console.log("📍 [DEBUG kamarApi] Hostname saat ini:", window.location.hostname);
+console.log("📍 [DEBUG kamarApi] VITE_API_URL dari env:", import.meta.env.VITE_API_URL);
+console.log("📍 [DEBUG kamarApi] BASE_URL yang aktif:", BASE_URL);
+console.log("📍 [DEBUG kamarApi] API_URL final:", API_URL);
+// -------------------------
+
 export const getKamar = async () => {
+    console.log("🚀 [DEBUG kamarApi] Memanggil getKamar() ke URL:", API_URL);
     const response = await fetch(API_URL);
 
     if (!response.ok) {

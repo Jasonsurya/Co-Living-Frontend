@@ -1,10 +1,12 @@
+import { getBaseUrl, getUploadsUrl } from "../../../services/api/config"; // Sesuaikan path relative foldernya
+
 export default function DetailLampiran({ dataPenghuni }) {
     const fotoKtp = dataPenghuni?.foto_ktp || dataPenghuni?.fotoKtp;
     const fotoDiri = dataPenghuni?.foto_diri || dataPenghuni?.fotoDiri;
 
-    // Base URL Backend & Uploads
-    const BACKEND_URL = "http://localhost:5000";
-    const API_UPLOADS_URL = `${BACKEND_URL}/uploads`;
+    // Base URL Backend & Uploads Dinamis
+    const API_UPLOADS_URL = getUploadsUrl();
+    const BACKEND_URL = getBaseUrl().replace("/api", "");
 
     // Helper untuk mengecek apakah data file valid
     const isValidFile = (file) => {
@@ -40,8 +42,8 @@ export default function DetailLampiran({ dataPenghuni }) {
             return `${API_UPLOADS_URL}/${cleanPath}`;
         }
 
-        // 5. DEFAULT FALLBACK (SAMAKAN DENGAN KAS HARIAN):
-        // Tambahkan subfolder /bukti/ untuk nama file murni (misal: "bukti-1790926009865-771216577.jpg")
+        // 5. DEFAULT FALLBACK:
+        // Tambahkan subfolder /bukti/ atau sesuaikan untuk nama file murni
         return `${API_UPLOADS_URL}/bukti/${cleanPath}`;
     };
 

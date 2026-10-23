@@ -3,6 +3,9 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Building2 } from 'lucide-react'; // Menggunakan ikon modern agar aman dari error path gambar
 
+// --- PERBAIKAN DI SINI (Gunakan config pusat) ---
+import { getBaseUrl } from '../services/api/config'; // Sesuaikan path relatif folder config.js Anda
+
 const loginText = {
   welcome: "Welcome to Co-Living Pagul!",
   subWelcome: "Log in to access your dashboard management account.",
@@ -14,14 +17,12 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // FUNGSI LOGIKA CEK LOGIN KE BACKEND API (Otomatis deteksi lokal vs Railway)
+  // FUNGSI LOGIKA CEK LOGIN KE BACKEND API (Menggunakan config pusat)
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const API_URL = window.location.hostname === "localhost"
-      ? "http://localhost:5000/api"
-      : "https://co-living-backend-production-1008.up.railway.app/api";
+    const API_URL = getBaseUrl();
 
     try {
       const response = await fetch(`${API_URL}/auth/login`, {
