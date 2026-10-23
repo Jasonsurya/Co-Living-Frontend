@@ -1,10 +1,10 @@
 // src/pages/LoginPage.jsx
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Building2 } from 'lucide-react'; // Menggunakan ikon modern agar aman dari error path gambar
+import { Building2 } from 'lucide-react';
 
-// --- PERBAIKAN DI SINI (Gunakan config pusat) ---
-import { getBaseUrl } from '../services/api/config'; // Sesuaikan path relatif folder config.js Anda
+// Gunakan config pusat
+import { getBaseUrl } from '../services/api/config';
 
 const loginText = {
   welcome: "Welcome to Co-Living Pagul!",
@@ -17,7 +17,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // FUNGSI LOGIKA CEK LOGIN KE BACKEND API (Menggunakan config pusat)
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -39,21 +38,23 @@ export default function LoginPage() {
         throw new Error(result.message || "Username atau Password salah!");
       }
 
-      // Simpan status sesi ke localStorage
-      localStorage.setItem("admin", JSON.stringify(result.data));
+      // --- PERBAIKAN UTAMA: SIMPAN KE sessionStorage ---
+      // sessionStorage akan otomatis terhapus saat tab/browser ditutup
+      sessionStorage.setItem("admin", JSON.stringify(result.data));
+      sessionStorage.setItem("token", result.token || "active_session"); // Menjadi acuan ProtectedRoute
+      sessionStorage.setItem("isAdminLoggedIn", "true");
 
       // Arahkan ke dashboard
       navigate('/dashboard');
 
     } catch (error) {
       alert(error.message || "Gagal melakukan login");
-      setPassword(''); // Reset password jika gagal
+      setPassword(''); 
     } finally {
       setLoading(false);
     }
   };
 
-  // FUNGSI PENANGANAN LUPA PASSWORD UNTUK PUBLIK
   const handleLupaPasswordClick = (e) => {
     e.preventDefault();
     alert(
