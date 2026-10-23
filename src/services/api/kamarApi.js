@@ -4,8 +4,8 @@ import API_BASE_URL from "./config";
 // Jika API_BASE_URL dari config masih mengarah ke localhost saat di production, 
 // kita beri pengaman otomatis:
 const BASE_URL = 
-  import.meta.env.VITE_API_URL || 
-  (window.location.hostname === "localhost" ? API_BASE_URL : "https://co-living-backend-production-1008.up.railway.app/api");
+import.meta.env.VITE_API_URL || 
+(window.location.hostname === "localhost" ? API_BASE_URL : "https://co-living-backend-production-1008.up.railway.app/api");
 
 const API_URL = `${BASE_URL}/kamar`;
 
