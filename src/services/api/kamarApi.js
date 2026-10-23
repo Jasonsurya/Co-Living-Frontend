@@ -1,20 +1,24 @@
-const BASE_URL = 
-import.meta.env.VITE_API_URL || 
-(window.location.hostname === "localhost" 
-    ? "http://localhost:5000/api" 
-    : "https://co-living-backend-production-1008.up.railway.app/api");
+// Menggunakan deteksi domain Vercel secara langsung agar 100% aman dari cache build & .env
+const getDynamicBaseUrl = () => {
+    // Jika domain saat ini mengandung '.vercel.app' atau bukan localhost, paksa gunakan Railway!
+    if (window.location.hostname.includes("vercel.app") || window.location.hostname !== "localhost") {
+        return "https://co-living-backend-production-1008.up.railway.app/api";
+    }
+    // Jika benar-benar sedang dibuka di laptop lokal
+    return "http://localhost:5000/api";
+};
 
+const BASE_URL = getDynamicBaseUrl();
 const API_URL = `${BASE_URL}/kamar`;
 
-// --- TAMBAHKAN LOG INI ---
-console.log("📍 [DEBUG kamarApi] Hostname saat ini:", window.location.hostname);
-console.log("📍 [DEBUG kamarApi] VITE_API_URL dari env:", import.meta.env.VITE_API_URL);
-console.log("📍 [DEBUG kamarApi] BASE_URL yang aktif:", BASE_URL);
-console.log("📍 [DEBUG kamarApi] API_URL final:", API_URL);
-// -------------------------
+// --- LOG DEBUGGING UNTUK MEMASTIKAN DI BROWSER ---
+console.log("📍 [DEBUG kamarApi] Hostname Browser:", window.location.hostname);
+console.log("📍 [DEBUG kamarApi] BASE_URL Final yang Dipakai:", BASE_URL);
+console.log("📍 [DEBUG kamarApi] API_URL Target:", API_URL);
+// --------------------------------------------------
 
 export const getKamar = async () => {
-    console.log("🚀 [DEBUG kamarApi] Memanggil getKamar() ke URL:", API_URL);
+    console.log("🚀 [DEBUG kamarApi] Mengirim request getKamar() ke:", API_URL);
     const response = await fetch(API_URL);
 
     if (!response.ok) {
