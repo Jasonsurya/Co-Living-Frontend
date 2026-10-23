@@ -1,12 +1,10 @@
 // src/services/api.js
 
-const API_URL =
-  import.meta.env.VITE_API_URL ||
-  (window.location.hostname === "localhost"
-    ? "http://localhost:5000/api"
-    : "https://co-living-backend-production-1008.up.railway.app/api");
+const API_URL = 
+  import.meta.env.VITE_API_URL || 
+  "https://co-living-backend-production-1008.up.railway.app/api";
 
-console.log("[API CONFIG]", {
+console.log("[API CONFIG FINAL]", {
   hostname: window.location.hostname,
   envUrl: import.meta.env.VITE_API_URL,
   finalUrl: API_URL,
