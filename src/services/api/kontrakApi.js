@@ -1,6 +1,9 @@
-import API_BASE_URL from "./config";
+// Menggunakan URL Railway langsung secara aman tanpa perlu file config terpisah
+const BASE_URL = 
+  import.meta.env.VITE_API_URL || 
+  (window.location.hostname === "localhost" ? "http://localhost:5000/api" : "https://co-living-backend-production-1008.up.railway.app/api");
 
-const API_URL = `${API_BASE_URL}/kontrak`;
+const API_URL = `${BASE_URL}/kontrak`;
 
 export const perpanjangKontrak = async (kamarId, data) => {
     const response = await fetch(`${API_URL}/perpanjang/${kamarId}`, {

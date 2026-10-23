@@ -24,6 +24,23 @@ export const getKamar = async () => {
   return await response.json();
 };
 
+export const isiKamar = async (kamarId, data) => {
+  const isFormData = data instanceof FormData;
+  const options = {
+    method: "POST",
+    body: isFormData ? data : JSON.stringify(data),
+  };
+  if (!isFormData) {
+    options.headers = { "Content-Type": "application/json" };
+  }
+  const response = await fetch(`${API_URL}/kamar/${kamarId}/isi`, options);
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Gagal mengisi kamar");
+  }
+  return await response.json();
+};
+
 export const getPenghuni = async () => {
   const response = await fetch(`${API_URL}/penghuni`);
   if (!response.ok) {
@@ -44,6 +61,22 @@ export const getPenghuniByKamarId = async (kamarId) => {
   const response = await fetch(`${API_URL}/penghuni/kamar/${kamarId}`);
   if (!response.ok) {
     throw new Error("Gagal mengambil data penghuni kamar");
+  }
+  return await response.json();
+};
+
+export const updatePenghuni = async (penghuniId, data) => {
+  const isFormData = data instanceof FormData;
+  const options = {
+    method: "PUT",
+    body: isFormData ? data : JSON.stringify(data),
+  };
+  if (!isFormData) {
+    options.headers = { "Content-Type": "application/json" };
+  }
+  const response = await fetch(`${API_URL}/penghuni/${penghuniId}`, options);
+  if (!response.ok) {
+    throw new Error("Gagal mengubah data penghuni");
   }
   return await response.json();
 };
@@ -92,9 +125,7 @@ export const getKontakDarurat = async () => {
 export const perpanjangKontrak = async (kamarId, data) => {
   const response = await fetch(`${API_URL}/kontrak/perpanjang/${kamarId}`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
 
@@ -149,16 +180,13 @@ export const getKontrakDeposit = async () => {
 
 export const tambahTransaksi = async (data) => {
   const isFormData = data instanceof FormData;
-
   const options = {
     method: "POST",
     body: isFormData ? data : JSON.stringify(data),
   };
 
   if (!isFormData) {
-    options.headers = {
-      "Content-Type": "application/json",
-    };
+    options.headers = { "Content-Type": "application/json" };
   }
 
   const response = await fetch(`${API_URL}/transaksi`, options);
@@ -172,16 +200,13 @@ export const tambahTransaksi = async (data) => {
 
 export const tambahTransaksiSewa = async (data) => {
   const isFormData = data instanceof FormData;
-
   const options = {
     method: "POST",
     body: isFormData ? data : JSON.stringify(data),
   };
 
   if (!isFormData) {
-    options.headers = {
-      "Content-Type": "application/json",
-    };
+    options.headers = { "Content-Type": "application/json" };
   }
 
   const response = await fetch(`${API_URL}/transaksi/sewa`, options);
