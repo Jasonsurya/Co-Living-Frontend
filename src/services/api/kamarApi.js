@@ -1,6 +1,13 @@
+// Langsung arahkan ke API URL global atau fallback aman ke Railway
 import API_BASE_URL from "./config";
 
-const API_URL = `${API_BASE_URL}/kamar`;
+// Jika API_BASE_URL dari config masih mengarah ke localhost saat di production, 
+// kita beri pengaman otomatis:
+const BASE_URL = 
+  import.meta.env.VITE_API_URL || 
+  (window.location.hostname === "localhost" ? API_BASE_URL : "https://co-living-backend-production-1008.up.railway.app/api");
+
+const API_URL = `${BASE_URL}/kamar`;
 
 export const getKamar = async () => {
     const response = await fetch(API_URL);
@@ -13,7 +20,6 @@ export const getKamar = async () => {
 };
 
 export const isiKamar = async (kamarId, data) => {
-    // Cek apakah data yang dikirim berupa FormData (mengandung file)
     const isFormData = data instanceof FormData;
 
     const options = {
@@ -21,8 +27,6 @@ export const isiKamar = async (kamarId, data) => {
         body: isFormData ? data : JSON.stringify(data),
     };
 
-    // Jika bukan FormData, set header application/json. 
-    // Jika FormData, biarkan browser menangani Content-Type secara otomatis.
     if (!isFormData) {
         options.headers = {
             "Content-Type": "application/json",
