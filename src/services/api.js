@@ -263,7 +263,8 @@ export const getRiwayatDeposit = async (kontrakId) => {
 // ==========================================
 
 export const generateSuratKontrak = async (kontrakId) => {
-  const response = await fetch(`${API_URL}/surat/generate/${kontrakId}`, {
+  // Ubah dari /surat/generate menjadi /dokumen-kontrak/generate (sesuai app.js backend)
+  const response = await fetch(`${API_URL}/dokumen-kontrak/generate/${kontrakId}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
   });
@@ -272,28 +273,30 @@ export const generateSuratKontrak = async (kontrakId) => {
 };
 
 export const uploadSuratKontrak = async (formData) => {
-  const response = await fetch(`${API_URL}/surat/upload`, {
+  const response = await fetch(`${API_URL}/dokumen-kontrak/upload`, {
     method: "POST",
-    body: formData, // FormData untuk file upload
+    body: formData,
   });
   if (!response.ok) throw new Error("Gagal mengunggah surat kontrak.");
   return await response.json();
 };
 
 export const getRiwayatSuratPenghuni = async (penghuniId) => {
-  const response = await fetch(`${API_URL}/surat/penghuni/${penghuniId}`);
+  const response = await fetch(`${API_URL}/dokumen-kontrak/penghuni/${penghuniId}`);
   if (!response.ok) throw new Error("Gagal mengambil riwayat surat penghuni.");
   return await response.json();
 };
 
 export const getDokumenKontrak = async (kontrakId) => {
-  const response = await fetch(`${API_URL}/surat/kontrak/${kontrakId}`);
+  const response = await fetch(`${API_URL}/dokumen-kontrak/kontrak/${kontrakId}`);
   if (!response.ok) throw new Error("Gagal mengambil dokumen kontrak.");
   return await response.json();
 };
 
 export const prosesDendaDeposit = async (data) => {
-  const response = await fetch(`${API_URL}/keuangan/denda-deposit`, {
+  // Jika denda masuk ke router deposit atau transaksi, sesuaikan path-nya. 
+  // Contoh jika masuk ke /deposit/denda:
+  const response = await fetch(`${API_URL}/deposit/denda-deposit`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
