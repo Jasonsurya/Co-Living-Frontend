@@ -18,27 +18,43 @@ export const perpanjangKontrak = async (kamarId, data) => {
 
     if (!response.ok) {
         const errorData = await response.json().catch(() => null);
-
-        throw new Error(
-            errorData?.message || "Gagal memperpanjang kontrak"
-        );
+        throw new Error(errorData?.message || "Gagal memperpanjang kontrak");
     }
 
     return await response.json();
 };
 
 export const keluarKamar = async (kamarId) => {
-    const response = await fetch(`${API_URL}/keluar/${kamarId}`, {
-        method: "POST",
-    });
+    const targetUrl = `${API_URL}/keluar/${kamarId}`;
+    
+    console.log("🚀 [DEBUG KONTRAK API] Menembak URL:", targetUrl);
 
-    if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
+    try {
+        const response = await fetch(targetUrl, {
+            method: "POST", // Harus sama dengan router.post di backend
+        });
 
-        throw new Error(
-            errorData?.message || "Gagal memproses keluar kamar"
-        );
+        console.log("🚀 [DEBUG KONTRAK API] Status HTTP:", response.status);
+
+        const responseText = await response.text();
+        
+        let result;
+        try {
+            result = JSON.parse(responseText);
+        } catch (e) {
+            console.error("❌ [DEBUG KONTRAK API] Server membalas bukan JSON:", responseText);
+            // Menambahkan { cause: e } untuk mengatasi peringatan ESLint
+            throw new Error(`Error ${response.status}: Server tidak membalas JSON`, { cause: e });
+        }
+
+        if (!response.ok) {
+            throw new Error(result.message || `Gagal (HTTP ${response.status})`);
+        }
+
+        console.log("✅ [DEBUG KONTRAK API] Sukses:", result);
+        return result;
+    } catch (error) {
+        console.error("❌ [DEBUG KONTRAK API] Error Fetch:", error.message);
+        throw error;
     }
-
-    return await response.json();
 };
