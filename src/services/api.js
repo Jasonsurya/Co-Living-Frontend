@@ -138,18 +138,47 @@ export const perpanjangKontrak = async (kamarId, data) => {
 };
 
 export const keluarKamar = async (kamarId) => {
-  const response = await fetch(`${API_URL}/kontrak/keluar/${kamarId}`, {
-    method: "POST",
-  });
+  // 1. Catat parameter apa yang masuk ke fungsi
+  console.log("🔍 [DEBUG KELUAR KAMAR] ID yang diterima:", kamarId);
+  console.log("🔍 [DEBUG KELUAR KAMAR] Base URL saat ini:", API_URL);
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
-    throw new Error(errorData?.message || "Gagal memproses keluar kamar");
+  const targetUrl = `${API_URL}/kontrak/keluar/${kamarId}`;
+  console.log("🔍 [DEBUG KELUAR KAMAR] Target URL Fetch:", targetUrl);
+
+  try {
+    const response = await fetch(targetUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    console.log("🔍 [DEBUG KELUAR KAMAR] Status Response HTTP:", response.status);
+    console.log("🔍 [DEBUG KELUAR KAMAR] Status Text:", response.statusText);
+
+    const responseText = await response.text();
+    console.log("🔍 [DEBUG KELUAR KAMAR] Raw Response Text:", responseText);
+
+    let result;
+    try {
+      result = JSON.parse(responseText);
+    } catch (e) {
+      console.error("❌ [DEBUG KELUAR KAMAR] Gagal parse JSON, respons server bukan JSON!", e);
+      throw new Error(`Server merespons bukan format JSON (Status ${response.status})`, { cause: e });
+    }
+
+    if (!response.ok) {
+      throw new Error(result.message || `Gagal memproses keluar kamar (HTTP ${response.status})`);
+    }
+
+    console.log("✅ [DEBUG KELUAR KAMAR] Berhasil:", result);
+    return result;
+
+  } catch (error) {
+    console.error("❌ [DEBUG KELUAR KAMAR] Catch Error:", error);
+    throw error;
   }
-
-  return await response.json();
 };
-
 // ==========================================
 // 2. TRANSAKSI & AKUN
 // ==========================================
