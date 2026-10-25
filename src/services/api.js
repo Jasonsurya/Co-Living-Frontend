@@ -16,9 +16,7 @@ export default API_URL;
 
 export const getKamar = async () => {
   const response = await fetch(`${API_URL}/kamar`);
-  if (!response.ok) {
-    throw new Error("Gagal mengambil data kamar");
-  }
+  if (!response.ok) throw new Error("Gagal mengambil data kamar");
   return await response.json();
 };
 
@@ -28,9 +26,8 @@ export const isiKamar = async (kamarId, data) => {
     method: "POST",
     body: isFormData ? data : JSON.stringify(data),
   };
-  if (!isFormData) {
-    options.headers = { "Content-Type": "application/json" };
-  }
+  if (!isFormData) options.headers = { "Content-Type": "application/json" };
+  
   const response = await fetch(`${API_URL}/kamar/${kamarId}/isi`, options);
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
@@ -41,25 +38,19 @@ export const isiKamar = async (kamarId, data) => {
 
 export const getPenghuni = async () => {
   const response = await fetch(`${API_URL}/penghuni`);
-  if (!response.ok) {
-    throw new Error("Gagal mengambil data penghuni");
-  }
+  if (!response.ok) throw new Error("Gagal mengambil data penghuni");
   return await response.json();
 };
 
 export const getPenghuniAktif = async () => {
   const response = await fetch(`${API_URL}/penghuni/aktif`);
-  if (!response.ok) {
-    throw new Error("Gagal mengambil data penghuni aktif");
-  }
+  if (!response.ok) throw new Error("Gagal mengambil data penghuni aktif");
   return await response.json();
 };
 
 export const getPenghuniByKamarId = async (kamarId) => {
   const response = await fetch(`${API_URL}/penghuni/kamar/${kamarId}`);
-  if (!response.ok) {
-    throw new Error("Gagal mengambil data penghuni kamar");
-  }
+  if (!response.ok) throw new Error("Gagal mengambil data penghuni kamar");
   return await response.json();
 };
 
@@ -69,29 +60,22 @@ export const updatePenghuni = async (penghuniId, data) => {
     method: "PUT",
     body: isFormData ? data : JSON.stringify(data),
   };
-  if (!isFormData) {
-    options.headers = { "Content-Type": "application/json" };
-  }
+  if (!isFormData) options.headers = { "Content-Type": "application/json" };
+  
   const response = await fetch(`${API_URL}/penghuni/${penghuniId}`, options);
-  if (!response.ok) {
-    throw new Error("Gagal mengubah data penghuni");
-  }
+  if (!response.ok) throw new Error("Gagal mengubah data penghuni");
   return await response.json();
 };
 
 export const getRiwayatPenghuni = async () => {
   const response = await fetch(`${API_URL}/penghuni/riwayat`);
-  if (!response.ok) {
-    throw new Error("Gagal mengambil riwayat penghuni");
-  }
+  if (!response.ok) throw new Error("Gagal mengambil riwayat penghuni");
   return await response.json();
 };
 
 export const getDetailRiwayatPenghuni = async (kontrakId) => {
   const response = await fetch(`${API_URL}/penghuni/riwayat/${kontrakId}`);
-  if (!response.ok) {
-    throw new Error("Gagal mengambil detail riwayat penghuni");
-  }
+  if (!response.ok) throw new Error("Gagal mengambil detail riwayat penghuni");
   return await response.json();
 };
 
@@ -106,102 +90,38 @@ export const getRiwayatPenghuniKamar = async (kamarId) => {
 
 export const getKontrak = async () => {
   const response = await fetch(`${API_URL}/kontrak`);
-  if (!response.ok) {
-    throw new Error("Gagal mengambil data kontrak");
-  }
+  if (!response.ok) throw new Error("Gagal mengambil data kontrak");
   return await response.json();
 };
 
 export const getKontakDarurat = async () => {
   const response = await fetch(`${API_URL}/kontak-darurat`);
-  if (!response.ok) {
-    throw new Error("Gagal mengambil data kontak darurat");
-  }
+  if (!response.ok) throw new Error("Gagal mengambil data kontak darurat");
   return await response.json();
 };
 
-export const perpanjangKontrak = async (kamarId, data) => {
-  const response = await fetch(`${API_URL}/kontrak/perpanjang/${kamarId}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
+// ✂️ CATATAN: Fungsi perpanjangKontrak dan keluarKamar SUDAH DIHAPUS dari sini!
+// Kedua fungsi tersebut sekarang eksklusif hidup di file src/services/api/kontrakApi.js
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => null);
-    throw new Error(errorData?.message || "Gagal memperpanjang kontrak");
-  }
-
-  return await response.json();
-};
-
-export const keluarKamar = async (kamarId) => {
-  // 1. Catat parameter apa yang masuk ke fungsi
-  console.log("🔍 [DEBUG KELUAR KAMAR] ID yang diterima:", kamarId);
-  console.log("🔍 [DEBUG KELUAR KAMAR] Base URL saat ini:", API_URL);
-
-  const targetUrl = `${API_URL}/kontrak/keluar/${kamarId}`;
-  console.log("🔍 [DEBUG KELUAR KAMAR] Target URL Fetch:", targetUrl);
-
-  try {
-    const response = await fetch(targetUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    console.log("🔍 [DEBUG KELUAR KAMAR] Status Response HTTP:", response.status);
-    console.log("🔍 [DEBUG KELUAR KAMAR] Status Text:", response.statusText);
-
-    const responseText = await response.text();
-    console.log("🔍 [DEBUG KELUAR KAMAR] Raw Response Text:", responseText);
-
-    let result;
-    try {
-      result = JSON.parse(responseText);
-    } catch (e) {
-      console.error("❌ [DEBUG KELUAR KAMAR] Gagal parse JSON, respons server bukan JSON!", e);
-      throw new Error(`Server merespons bukan format JSON (Status ${response.status})`, { cause: e });
-    }
-
-    if (!response.ok) {
-      throw new Error(result.message || `Gagal memproses keluar kamar (HTTP ${response.status})`);
-    }
-
-    console.log("✅ [DEBUG KELUAR KAMAR] Berhasil:", result);
-    return result;
-
-  } catch (error) {
-    console.error("❌ [DEBUG KELUAR KAMAR] Catch Error:", error);
-    throw error;
-  }
-};
 // ==========================================
 // 2. TRANSAKSI & AKUN
 // ==========================================
 
 export const getTransaksi = async () => {
   const response = await fetch(`${API_URL}/transaksi`);
-  if (!response.ok) {
-    throw new Error("Gagal mengambil data transaksi");
-  }
+  if (!response.ok) throw new Error("Gagal mengambil data transaksi");
   return await response.json();
 };
 
 export const getDataSewaAktif = async () => {
   const response = await fetch(`${API_URL}/transaksi/sewa-aktif`);
-  if (!response.ok) {
-    throw new Error("Gagal mengambil data sewa aktif");
-  }
+  if (!response.ok) throw new Error("Gagal mengambil data sewa aktif");
   return await response.json();
 };
 
 export const getKontrakDeposit = async () => {
   const response = await fetch(`${API_URL}/transaksi/kontrak-deposit`);
-  if (!response.ok) {
-    throw new Error("Gagal mengambil data kontrak deposit");
-  }
+  if (!response.ok) throw new Error("Gagal mengambil data kontrak deposit");
   return await response.json();
 };
 
@@ -211,17 +131,11 @@ export const tambahTransaksi = async (data) => {
     method: "POST",
     body: isFormData ? data : JSON.stringify(data),
   };
-
-  if (!isFormData) {
-    options.headers = { "Content-Type": "application/json" };
-  }
+  if (!isFormData) options.headers = { "Content-Type": "application/json" };
 
   const response = await fetch(`${API_URL}/transaksi`, options);
   const result = await response.json();
-
-  if (!response.ok) {
-    throw new Error(result.message || "Gagal menambahkan transaksi");
-  }
+  if (!response.ok) throw new Error(result.message || "Gagal menambahkan transaksi");
   return result;
 };
 
@@ -231,37 +145,24 @@ export const tambahTransaksiSewa = async (data) => {
     method: "POST",
     body: isFormData ? data : JSON.stringify(data),
   };
-
-  if (!isFormData) {
-    options.headers = { "Content-Type": "application/json" };
-  }
+  if (!isFormData) options.headers = { "Content-Type": "application/json" };
 
   const response = await fetch(`${API_URL}/transaksi/sewa`, options);
   const result = await response.json();
-
-  if (!response.ok) {
-    throw new Error(result.message || "Gagal mencatat pembayaran sewa");
-  }
+  if (!response.ok) throw new Error(result.message || "Gagal mencatat pembayaran sewa");
   return result;
 };
 
 export const hapusTransaksi = async (id) => {
-  const response = await fetch(`${API_URL}/transaksi/${id}`, {
-    method: "DELETE",
-  });
-
+  const response = await fetch(`${API_URL}/transaksi/${id}`, { method: "DELETE" });
   const result = await response.json();
-  if (!response.ok) {
-    throw new Error(result.message || "Gagal menghapus transaksi");
-  }
+  if (!response.ok) throw new Error(result.message || "Gagal menghapus transaksi");
   return result;
 };
 
 export const getAkun = async () => {
   const response = await fetch(`${API_URL}/akun`);
-  if (!response.ok) {
-    throw new Error("Gagal mengambil data akun");
-  }
+  if (!response.ok) throw new Error("Gagal mengambil data akun");
   return await response.json();
 };
 
@@ -271,17 +172,13 @@ export const getAkun = async () => {
 
 export const getSaldoDeposit = async (kontrakId) => {
   const response = await fetch(`${API_URL}/deposit/saldo/${kontrakId}`);
-  if (!response.ok) {
-    throw new Error("Gagal mengambil saldo deposit");
-  }
+  if (!response.ok) throw new Error("Gagal mengambil saldo deposit");
   return await response.json();
 };
 
 export const getRiwayatDeposit = async (kontrakId) => {
   const response = await fetch(`${API_URL}/deposit/riwayat/${kontrakId}`);
-  if (!response.ok) {
-    throw new Error("Gagal mengambil riwayat deposit");
-  }
+  if (!response.ok) throw new Error("Gagal mengambil riwayat deposit");
   return await response.json();
 };
 
@@ -290,7 +187,6 @@ export const getRiwayatDeposit = async (kontrakId) => {
 // ==========================================
 
 export const generateSuratKontrak = async (kontrakId) => {
-  // Ubah dari /surat/generate menjadi /dokumen-kontrak/generate (sesuai app.js backend)
   const response = await fetch(`${API_URL}/dokumen-kontrak/generate/${kontrakId}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -321,8 +217,6 @@ export const getDokumenKontrak = async (kontrakId) => {
 };
 
 export const prosesDendaDeposit = async (data) => {
-  // Jika denda masuk ke router deposit atau transaksi, sesuaikan path-nya. 
-  // Contoh jika masuk ke /deposit/denda:
   const response = await fetch(`${API_URL}/deposit/denda-deposit`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

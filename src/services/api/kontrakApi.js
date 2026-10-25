@@ -1,9 +1,7 @@
-// Menggunakan URL Railway langsung secara aman tanpa perlu file config terpisah
-const BASE_URL = 
-import.meta.env.VITE_API_URL || 
-(window.location.hostname === "localhost" 
+// KITA BYPASS VITE_API_URL KARENA SETTINGANNYA KURANG 'https://'
+const BASE_URL = window.location.hostname === "localhost" 
     ? "http://localhost:5000/api" 
-    : "https://co-living-backend-production-1008.up.railway.app/api");
+    : "https://co-living-backend-production-1008.up.railway.app/api";
 
 const API_URL = `${BASE_URL}/kontrak`;
 
@@ -43,7 +41,6 @@ export const keluarKamar = async (kamarId) => {
             result = JSON.parse(responseText);
         } catch (e) {
             console.error("❌ [DEBUG KONTRAK API] Server membalas bukan JSON:", responseText);
-            // Menambahkan { cause: e } untuk mengatasi peringatan ESLint
             throw new Error(`Error ${response.status}: Server tidak membalas JSON`, { cause: e });
         }
 
