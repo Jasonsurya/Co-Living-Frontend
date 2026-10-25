@@ -217,11 +217,24 @@ export const getDokumenKontrak = async (kontrakId) => {
 };
 
 export const prosesDendaDeposit = async (data) => {
-  const response = await fetch(`${API_URL}/deposit/denda-deposit`, {
+  const targetUrl = `${API_URL}/deposit/denda`;
+  
+  const isFormData = data instanceof FormData;
+  const options = {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) throw new Error("Gagal memproses denda atau deposit.");
+    body: isFormData ? data : JSON.stringify(data),
+  };
+
+  if (!isFormData) {
+    options.headers = { "Content-Type": "application/json" };
+  }
+
+  const response = await fetch(targetUrl, options);
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Gagal memproses denda atau deposit.");
+  }
+  
   return await response.json();
 };
