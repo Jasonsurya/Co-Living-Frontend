@@ -30,8 +30,14 @@ export default function ModalUploadSurat({
     try {
       setLoading(true);
 
-      // Panggil API baru untuk mengunggah berkas kontrak bertanda tangan
-      const hasil = await uploadSuratKontrak(kontrakId, file);
+      // 1. KITA BUNGKUS FILENYA KE DALAM FORMDATA
+      const formData = new FormData();
+      
+      // 2. NAMA KUNCI WAJIB "file_kontrak" (Sesuai dengan multer di backend)
+      formData.append("file_kontrak", file);
+
+      // 3. BARU KITA KIRIM FORMDATA TERSEBUT
+      const hasil = await uploadSuratKontrak(kontrakId, formData);
 
       alert("Surat bertanda tangan berhasil diunggah!");
 

@@ -195,12 +195,18 @@ export const generateSuratKontrak = async (kontrakId) => {
   return await response.json();
 };
 
-export const uploadSuratKontrak = async (formData) => {
-  const response = await fetch(`${API_URL}/dokumen-kontrak/upload`, {
+export const uploadSuratKontrak = async (kontrakId, formData) => {
+  const targetUrl = `${API_URL}/dokumen-kontrak/upload/${kontrakId}`;
+  
+  const response = await fetch(targetUrl, {
     method: "POST",
-    body: formData,
+    body: formData, 
   });
-  if (!response.ok) throw new Error("Gagal mengunggah surat kontrak.");
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Gagal mengunggah surat kontrak.");
+  }
   return await response.json();
 };
 
