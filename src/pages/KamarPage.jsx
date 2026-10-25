@@ -35,9 +35,10 @@ export default function KamarPage() {
     const fetchKamar = async () => {
       try {
         const data = await getKamar();
+        console.log("🟢 [KamarPage] Data Kamar berhasil dimuat:", data);
         setKamarList(data);
       } catch (error) {
-        console.error("Gagal mengambil data kamar:", error.message);
+        console.error("❌ [KamarPage] Gagal mengambil data kamar:", error.message);
       }
     };
 
@@ -52,7 +53,9 @@ export default function KamarPage() {
 
   const handleOpenEditModal = async (kamar) => {
     try {
+      console.log("🔍 [KamarPage] Mengambil data penghuni untuk kamar ID:", kamar.id);
       const dataLengkap = await getPenghuniByKamarId(kamar.id);
+      console.log("🟢 [KamarPage] Data lengkap penghuni didapat:", dataLengkap);
 
       setSelectedKamar(kamar);
       setSelectedPenghuniData(dataLengkap);
@@ -60,10 +63,7 @@ export default function KamarPage() {
       setMenuOpen(null);
 
     } catch (error) {
-      console.error(
-        "Gagal mengambil data penghuni:",
-        error.message
-      );
+      console.error("❌ [KamarPage] Gagal mengambil data penghuni:", error.message);
     }
   };
 
@@ -75,6 +75,7 @@ export default function KamarPage() {
   };
 
   const handleOpenPopUpKeluar = (kamar) => {
+    console.log("🚪 [KamarPage] Modal Keluar Kamar dibuka untuk Kamar:", kamar);
     setSelectedKamar(kamar);
     setSelectedPenghuniName(kamar.nama_penghuni || "");
     setIsPopUpOpen(true);
@@ -82,7 +83,15 @@ export default function KamarPage() {
 
   const handleKeluarKamar = async () => {
     try {
-      await keluarKamar(selectedKamar.id);
+      console.log("🚀 [KamarPage] Tombol konfirmasi keluar kamar diklik.");
+      console.log("📍 [KamarPage] Objek selectedKamar saat ini:", selectedKamar);
+
+      // Cek apakah yang dikirim harusnya id kontrak atau id kamar
+      // Perhatikan properti apa saja yang ada di dalam objek selectedKamar (misal: selectedKamar.kontrak_id atau selectedKamar.id)
+      const idYangDikirim = selectedKamar.kontrak_id || selectedKamar.id;
+      console.log("📍 [KamarPage] ID yang akan dikirim ke fungsi keluarKamar:", idYangDikirim);
+
+      await keluarKamar(idYangDikirim);
 
       window.dispatchEvent(new Event("penghuniUpdated"));
 
@@ -93,19 +102,15 @@ export default function KamarPage() {
       setSelectedKamar(null);
       setSelectedPenghuniName("");
 
-      console.log("Kamar berhasil dikosongkan");
+      console.log("✅ [KamarPage] Kamar berhasil dikosongkan");
     } catch (error) {
-      console.error(
-        "Gagal memproses keluar kamar:",
-        error.message
-      );
+      console.error("❌ [KamarPage] Gagal memproses keluar kamar:", error.message);
     }
   };
 
- const handleSaveModal = async (formData) => {
+  const handleSaveModal = async (formData) => {
     if (modalMode === "create") {
       try {
-        // formData di sini adalah objek FormData yang dikirim dari ModalDataPenghuni
         let parsedKontakDarurat = [];
         try {
           const rawKontak = formData.get("kontak_darurat");
@@ -114,10 +119,7 @@ export default function KamarPage() {
           parsedKontakDarurat = [];
         }
 
-        // Susun kembali menjadi FormData yang membungkus File + data berjenjang untuk backend
         const dataForm = new FormData();
-        
-        // Data Penghuni
         dataForm.append("nama", formData.get("nama") || "");
         dataForm.append("nik", formData.get("nik") || "");
         dataForm.append("gender", formData.get("gender") || "Laki-laki");
@@ -127,49 +129,39 @@ export default function KamarPage() {
         dataForm.append("no_hp", formData.get("no_hp") || "");
         dataForm.append("pekerjaan", formData.get("pekerjaan") || "");
 
-        // Kontak Darurat & Kontrak
         dataForm.append("kontak_darurat", JSON.stringify(parsedKontakDarurat));
         dataForm.append("tanggal_perjanjian", formData.get("tanggal_perjanjian") || "");
         dataForm.append("tanggal_mulai", formData.get("tanggal_mulai") || "");
         dataForm.append("tanggal_berakhir", formData.get("tanggal_berakhir") || "");
 
-        // File Foto KTP & Foto Diri
         const fotoKtpFile = formData.get("foto_ktp");
         const fotoDiriFile = formData.get("foto_diri");
-        if (fotoKtpFile instanceof File) {
-          dataForm.append("foto_ktp", fotoKtpFile);
-        }
-        if (fotoDiriFile instanceof File) {
-          dataForm.append("foto_diri", fotoDiriFile);
-        }
+        if (fotoKtpFile instanceof File) dataForm.append("foto_ktp", fotoKtpFile);
+        if (fotoDiriFile instanceof File) dataForm.append("foto_diri", fotoDiriFile);
 
         await isiKamar(selectedKamar.id, dataForm);
-
-        console.log("Kamar berhasil diisi dengan foto");
+        console.log("✅ [KamarPage] Kamar berhasil diisi");
 
         window.dispatchEvent(new Event("penghuniUpdated"));
-
         const dataKamarTerbaru = await getKamar();
         setKamarList(dataKamarTerbaru);
 
       } catch (error) {
-        console.error("Gagal mengisi kamar:", error.message);
+        console.error("❌ [KamarPage] Gagal mengisi kamar:", error.message);
       }
     }
 
     if (modalMode === "edit") {
       try {
         await updatePenghuni(selectedPenghuniData.id, formData);
-
-        console.log("Data penghuni berhasil diperbarui");
+        console.log("✅ [KamarPage] Data penghuni berhasil diperbarui");
 
         window.dispatchEvent(new Event("penghuniUpdated"));
-
         const dataKamarTerbaru = await getKamar();
         setKamarList(dataKamarTerbaru);
 
       } catch (error) {
-        console.error("Gagal mengubah data penghuni:", error.message);
+        console.error("❌ [KamarPage] Gagal mengubah data penghuni:", error.message);
         return;
       }
     }
@@ -183,16 +175,14 @@ export default function KamarPage() {
         };
 
         await perpanjangKontrak(selectedKamar.id, data);
-
-        console.log("Kontrak berhasil diperpanjang");
+        console.log("✅ [KamarPage] Kontrak berhasil diperpanjang");
 
         window.dispatchEvent(new Event("penghuniUpdated"));
-
         const dataKamarTerbaru = await getKamar();
         setKamarList(dataKamarTerbaru);
 
       } catch (error) {
-        console.error("Gagal memperpanjang kontrak:", error.message);
+        console.error("❌ [KamarPage] Gagal memperpanjang kontrak:", error.message);
         return;
       }
     }
@@ -230,7 +220,6 @@ export default function KamarPage() {
                 {isTerisi ? (
                   <>
                     <DoorClosed className="mb-4 h-14 w-14 text-emerald-600" />
-
                     <p className="text-center text-base font-semibold text-slate-800">
                       {kamar.nama_penghuni || "Nama penghuni belum tersedia"}
                     </p>
@@ -238,7 +227,6 @@ export default function KamarPage() {
                 ) : (
                   <>
                     <DoorOpen className="mb-4 h-14 w-14 text-slate-400" />
-
                     <p className="text-center text-base font-semibold text-slate-500">
                       Belum ada penghuni
                     </p>
@@ -276,7 +264,7 @@ export default function KamarPage() {
               </div>
 
               {menuOpen === kamar.id && (
-                <div className="absolute right-4 bottom-16 w-48 rounded-xl border border-slate-200 bg-white shadow-xl overflow-hidden">
+                <div className="absolute right-4 bottom-16 w-48 rounded-xl border border-slate-200 bg-white shadow-xl overflow-hidden z-10">
                   <button
                     onClick={() => handleOpenEditModal(kamar)}
                     className="flex w-full items-center gap-2 px-4 py-3 hover:bg-slate-50 cursor-pointer"
