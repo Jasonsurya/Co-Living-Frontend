@@ -1,10 +1,8 @@
 // src/services/api.js
 
-import { getBaseUrl } from "./api/config";
+const API_URL = "https://co-living-backend-production-1008.up.railway.app/api";
 
-const API_URL = getBaseUrl();
-
-console.log("[API CONFIG FINAL]", {
+console.log("[API CONFIG FINAL - FIXED]", {
   hostname: window.location.hostname,
   envUrl: import.meta.env.VITE_API_URL,
   finalUrl: API_URL,
